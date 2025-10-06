@@ -35,7 +35,7 @@ export default function SiteHeader() {
               data-ai-hint={logo.imageHint}
             />
           )}
-          <span className="font-bold text-lg hidden sm:inline">Kourkyls Int'l School</span>
+          <span className="font-bold text-lg hidden sm:inline">Kourkly's Classroom Companion</span>
         </Link>
         <nav className="hidden md:flex items-center gap-6">
           {navLinks.map(link => (
@@ -76,7 +76,7 @@ export default function SiteHeader() {
                             data-ai-hint={logo.imageHint}
                             />
                         )}
-                        <span className="font-bold">Kourkyls Int'l School</span>
+                        <span className="font-bold">Kourkly's Classroom Companion</span>
                     </Link>
                   {navLinks.map(link => (
                     <Link

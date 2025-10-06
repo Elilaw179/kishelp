@@ -6,7 +6,7 @@ import SiteFooter from '@/components/layout/site-footer';
 import { ThemeProvider } from '@/components/layout/theme-provider';
 
 export const metadata: Metadata = {
-  title: "Kourk's Classroom Companion",
+  title: "Kourkly's Classroom Companion",
   description: 'A professional site for students of Kourkyls International School',
 };
 
