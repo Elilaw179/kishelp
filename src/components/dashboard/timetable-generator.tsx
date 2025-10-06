@@ -121,25 +121,6 @@ export default function TimetableGenerator() {
     window.print();
   };
 
-  const getMobileFriendlyData = (timetable: TimetableOutput) => {
-    const { headers, rows } = timetable;
-    if (!headers || headers.length <= 1) return [];
-
-    const timeHeaderIndex = 0; // Assuming 'Time' is always first
-    const dayHeaders = headers.slice(1);
-
-    const mobileData = dayHeaders.map((day, dayIndex) => {
-        const schedule = rows.map(row => ({
-            time: row[timeHeaderIndex],
-            activity: row[dayIndex + 1]
-        })).filter(item => item.activity && item.activity.trim() !== '');
-
-        return { day, schedule };
-    }).filter(dayData => dayData.schedule.length > 0);
-
-    return mobileData;
-  }
-
   return (
     <Card className="shadow-lg">
       <CardHeader>
@@ -197,44 +178,25 @@ export default function TimetableGenerator() {
                         <p className="ml-2">Updating...</p>
                       </div>
                     ) : (
-                      <div>
-                        {/* Desktop Table View */}
-                        <div className="hidden md:block w-full overflow-x-auto">
-                          <Table>
-                            <TableHeader>
-                              <TableRow>
-                                {timetable.headers.map((header, index) => (
-                                  <TableHead key={index} className="font-bold">{header}</TableHead>
+                      <div className="w-full overflow-x-auto">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              {timetable.headers.map((header, index) => (
+                                <TableHead key={index} className="font-bold">{header}</TableHead>
+                              ))}
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {timetable.rows.map((row, rowIndex) => (
+                              <TableRow key={rowIndex}>
+                                {row.map((cell, cellIndex) => (
+                                  <TableCell key={cellIndex}>{cell}</TableCell>
                                 ))}
                               </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                              {timetable.rows.map((row, rowIndex) => (
-                                <TableRow key={rowIndex}>
-                                  {row.map((cell, cellIndex) => (
-                                    <TableCell key={cellIndex}>{cell}</TableCell>
-                                  ))}
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </div>
-                        {/* Mobile List View */}
-                        <div className="block md:hidden space-y-4">
-                            {getMobileFriendlyData(timetable).map(({day, schedule}) => (
-                                <div key={day}>
-                                    <h4 className='font-semibold text-sm mb-2'>{day}</h4>
-                                    <div className='space-y-2 pl-2 border-l-2 border-primary/50'>
-                                        {schedule.map(({time, activity}) => (
-                                            <div key={time} className='flex justify-between items-center text-sm'>
-                                                <span>{activity}</span>
-                                                <span className='text-xs text-muted-foreground'>{time}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
                             ))}
-                        </div>
+                          </TableBody>
+                        </Table>
                       </div>
                     )}
                   </CardContent>
