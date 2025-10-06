@@ -65,8 +65,8 @@ export default function SiteFooter() {
                         <h3 className="font-bold text-lg mb-4">For Students</h3>
                         <ul className="space-y-2">
                            <li>
-                             <Link href="/presentation" className="text-muted-foreground hover:text-primary transition-colors">
-                                Presentation Guide
+                             <Link href="/dashboard" className="text-muted-foreground hover:text-primary transition-colors">
+                                Student Portal
                             </Link>
                            </li>
                         </ul>
