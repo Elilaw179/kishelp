@@ -6,22 +6,27 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { CalendarDays, Wand2, Loader, Trash2 } from 'lucide-react';
-import { generateTimetable } from '@/ai/flows/get-started-timetable';
+import { generateTimetable, TimetableOutput } from '@/ai/flows/get-started-timetable';
 import { useToast } from '@/hooks/use-toast';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 const isBrowser = typeof window !== 'undefined';
 
 export default function TimetableGenerator() {
   const [prompt, setPrompt] = useState('Example: I have Math on Monday at 9am, Science on Tuesday at 10am, and Coding club on Friday afternoon.');
-  const [timetable, setTimetable] = useState('');
+  const [timetable, setTimetable] = useState<TimetableOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     if (isBrowser) {
-      const storedTimetable = localStorage.getItem('timetable');
-      if (storedTimetable) {
-        setTimetable(storedTimetable);
+      try {
+        const storedTimetable = localStorage.getItem('timetable');
+        if (storedTimetable) {
+          setTimetable(JSON.parse(storedTimetable));
+        }
+      } catch (error) {
+        console.error('Error parsing timetable from localStorage', error);
       }
     }
   }, []);
@@ -29,7 +34,7 @@ export default function TimetableGenerator() {
   useEffect(() => {
     if (isBrowser) {
       if (timetable || localStorage.getItem('timetable')) {
-        localStorage.setItem('timetable', timetable);
+        localStorage.setItem('timetable', JSON.stringify(timetable));
       }
     }
   }, [timetable]);
@@ -39,10 +44,10 @@ export default function TimetableGenerator() {
     if (prompt.trim() === '' || isLoading) return;
 
     setIsLoading(true);
-    setTimetable('');
+    setTimetable(null);
     try {
       const response = await generateTimetable({ prompt });
-      setTimetable(response.timetable);
+      setTimetable(response);
     } catch (error) {
       console.error('Error generating timetable:', error);
       toast({
@@ -56,7 +61,7 @@ export default function TimetableGenerator() {
   };
 
   const handleClearTimetable = () => {
-    setTimetable('');
+    setTimetable(null);
     localStorage.removeItem('timetable');
   }
 
@@ -95,9 +100,28 @@ export default function TimetableGenerator() {
                 </Button>
               )}
             </div>
-            <ScrollArea className="h-48 w-full rounded-md border p-4 bg-background/50">
-              {isLoading && !timetable && <p className="text-muted-foreground">Generating your timetable...</p>}
-              <pre className="text-sm whitespace-pre-wrap font-body">{timetable}</pre>
+            <ScrollArea className="h-48 w-full rounded-md border bg-background/50">
+              {isLoading && !timetable && <p className="text-muted-foreground p-4">Generating your timetable...</p>}
+              {timetable && (
+                 <Table>
+                  <TableHeader>
+                    <TableRow>
+                      {timetable.headers.map((header, index) => (
+                        <TableHead key={index} className="font-bold">{header}</TableHead>
+                      ))}
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {timetable.rows.map((row, rowIndex) => (
+                      <TableRow key={rowIndex}>
+                        {row.map((cell, cellIndex) => (
+                          <TableCell key={cellIndex}>{cell}</TableCell>
+                        ))}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
             </ScrollArea>
           </div>
         )}

@@ -18,7 +18,8 @@ const TimetableInputSchema = z.object({
 export type TimetableInput = z.infer<typeof TimetableInputSchema>;
 
 const TimetableOutputSchema = z.object({
-  timetable: z.string().describe('A timetable generated from the prompt.'),
+  headers: z.array(z.string()).describe('The headers for the timetable table (e.g., ["Time", "Monday", "Tuesday"]).'),
+  rows: z.array(z.array(z.string())).describe('The rows of the timetable, where each inner array represents a row of cells.'),
 });
 export type TimetableOutput = z.infer<typeof TimetableOutputSchema>;
 
@@ -30,9 +31,9 @@ const timetablePrompt = ai.definePrompt({
   name: 'timetablePrompt',
   input: {schema: TimetableInputSchema},
   output: {schema: TimetableOutputSchema},
-  prompt: `You are a helpful assistant that generates a timetable based on a text prompt. The timetable should be returned as a string.
+  prompt: `You are a helpful assistant that generates a timetable based on a text prompt. Analyze the user's prompt and structure the response as a JSON object with 'headers' and 'rows' for a table. For example, if the prompt is "Math on Monday at 9am, Science on Tuesday at 10am", the output should have headers like ["Time", "Monday", "Tuesday"] and rows representing the schedule. Be logical with the time slots.
 
-Prompt: {{{prompt}}}`, 
+Prompt: {{{prompt}}}`,
 });
 
 const generateTimetableFlow = ai.defineFlow(
