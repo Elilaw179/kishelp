@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { MessageCircle, Send, Loader, User, Bot } from 'lucide-react';
+import { MessageCircle, Send, Loader, User, Bot, Trash2 } from 'lucide-react';
 import { askSubjectQuestion } from '@/ai/flows/ai-subject-guidance';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -17,6 +17,7 @@ interface Message {
 }
 
 const subjects = ['Mathematics', 'Physics', 'Chemistry', 'Biology', 'History', 'Geography', 'English', 'Coding'];
+const isBrowser = typeof window !== 'undefined';
 
 export default function AiChatbot() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -27,10 +28,38 @@ export default function AiChatbot() {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (isBrowser) {
+      try {
+        const storedMessages = localStorage.getItem('chatHistory');
+        if (storedMessages) {
+          setMessages(JSON.parse(storedMessages));
+        }
+      } catch (error) {
+        console.error('Error parsing chat history from localStorage', error);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isBrowser) {
+       // Avoid saving the initial empty array state before messages are loaded.
+      if (messages.length > 0 || localStorage.getItem('chatHistory')) {
+        localStorage.setItem('chatHistory', JSON.stringify(messages));
+      }
+    }
+  }, [messages]);
+
+
+  useEffect(() => {
     if (scrollAreaRef.current) {
       scrollAreaRef.current.scrollTo({ top: scrollAreaRef.current.scrollHeight, behavior: 'smooth' });
     }
   }, [messages]);
+
+  const handleClearChat = () => {
+    setMessages([]);
+    localStorage.removeItem('chatHistory');
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,11 +90,16 @@ export default function AiChatbot() {
 
   return (
     <Card className="h-full flex flex-col shadow-lg">
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="flex items-center gap-2">
           <MessageCircle className="h-6 w-6" />
           <span>AI Subject Guidance</span>
         </CardTitle>
+        {messages.length > 0 && (
+          <Button variant="ghost" size="icon" onClick={handleClearChat} aria-label="Clear chat history">
+            <Trash2 className="h-4 w-4 text-destructive/80" />
+          </Button>
+        )}
       </CardHeader>
       <CardContent className="flex-grow overflow-hidden">
         <ScrollArea className="h-[400px] w-full pr-4" ref={scrollAreaRef}>

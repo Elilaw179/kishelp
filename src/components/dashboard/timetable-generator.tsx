@@ -1,19 +1,39 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { CalendarDays, Wand2, Loader } from 'lucide-react';
+import { CalendarDays, Wand2, Loader, Trash2 } from 'lucide-react';
 import { generateTimetable } from '@/ai/flows/get-started-timetable';
 import { useToast } from '@/hooks/use-toast';
+
+const isBrowser = typeof window !== 'undefined';
 
 export default function TimetableGenerator() {
   const [prompt, setPrompt] = useState('Example: I have Math on Monday at 9am, Science on Tuesday at 10am, and Coding club on Friday afternoon.');
   const [timetable, setTimetable] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (isBrowser) {
+      const storedTimetable = localStorage.getItem('timetable');
+      if (storedTimetable) {
+        setTimetable(storedTimetable);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isBrowser) {
+      if (timetable || localStorage.getItem('timetable')) {
+        localStorage.setItem('timetable', timetable);
+      }
+    }
+  }, [timetable]);
+
 
   const handleGenerate = async () => {
     if (prompt.trim() === '' || isLoading) return;
@@ -34,6 +54,11 @@ export default function TimetableGenerator() {
       setIsLoading(false);
     }
   };
+
+  const handleClearTimetable = () => {
+    setTimetable('');
+    localStorage.removeItem('timetable');
+  }
 
   return (
     <Card className="shadow-lg">
@@ -62,7 +87,14 @@ export default function TimetableGenerator() {
         </Button>
         {(isLoading || timetable) && (
           <div className="mt-4">
-            <h4 className="font-semibold mb-2">Generated Timetable:</h4>
+            <div className="flex justify-between items-center mb-2">
+              <h4 className="font-semibold">Generated Timetable:</h4>
+               {timetable && !isLoading && (
+                <Button variant="ghost" size="icon" onClick={handleClearTimetable} aria-label="Clear timetable">
+                  <Trash2 className="h-4 w-4 text-destructive/80" />
+                </Button>
+              )}
+            </div>
             <ScrollArea className="h-48 w-full rounded-md border p-4 bg-background/50">
               {isLoading && !timetable && <p className="text-muted-foreground">Generating your timetable...</p>}
               <pre className="text-sm whitespace-pre-wrap font-body">{timetable}</pre>
