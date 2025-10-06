@@ -9,6 +9,7 @@ import { Menu } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
+import { ThemeToggle } from './theme-toggle';
 
 const navLinks = [
   { name: 'Home', href: '/' },
@@ -51,6 +52,7 @@ export default function SiteHeader() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
+           <ThemeToggle />
            <Link href="/dashboard">
              <Button className="hidden md:flex">Student Portal</Button>
            </Link>
