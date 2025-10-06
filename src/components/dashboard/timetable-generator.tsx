@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { CalendarDays, Wand2, Loader, Trash2 } from 'lucide-react';
+import { CalendarDays, Wand2, Loader, Trash2, Printer } from 'lucide-react';
 import { generateTimetable, TimetableOutput } from '@/ai/flows/get-started-timetable';
 import { useToast } from '@/hooks/use-toast';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -22,6 +22,7 @@ export default function TimetableGenerator() {
   const [timetables, setTimetables] = useState<EnrichedTimetableOutput[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const timetableRefs = useRef<{[key: number]: HTMLDivElement | null}>({});
 
   useEffect(() => {
     if (isBrowser) {
@@ -77,6 +78,22 @@ export default function TimetableGenerator() {
     }
   }
 
+  const handlePrint = (id: number) => {
+    const timetableElement = timetableRefs.current[id];
+    if (!timetableElement) return;
+
+    const onAfterPrint = () => {
+      document.body.classList.remove('printing-timetable');
+      timetableElement.classList.remove('printable-content');
+      window.removeEventListener('afterprint', onAfterPrint);
+    };
+
+    window.addEventListener('afterprint', onAfterPrint);
+    document.body.classList.add('printing-timetable');
+    timetableElement.classList.add('printable-content');
+    window.print();
+  };
+
   return (
     <Card className="shadow-lg">
       <CardHeader>
@@ -109,15 +126,20 @@ export default function TimetableGenerator() {
               {isLoading && <p className="text-muted-foreground p-4">Generating your new timetable...</p>}
               {timetables.length === 0 && !isLoading && <p className="text-muted-foreground text-center py-4">No timetables yet. Generate one above!</p>}
               {timetables.map((timetable) => (
-                <Card key={timetable.id} className="bg-background/50">
+                <Card key={timetable.id} ref={el => (timetableRefs.current[timetable.id] = el)} className="bg-background/50">
                   <CardHeader className="flex flex-row items-start justify-between pb-2">
                     <div>
                       <CardTitle className="text-base">Timetable</CardTitle>
                       <p className="text-xs text-muted-foreground truncate max-w-[200px] md:max-w-xs">Based on: "{timetable.prompt}"</p>
                     </div>
-                    <Button variant="ghost" size="icon" onClick={() => handleDeleteTimetable(timetable.id)} aria-label="Delete timetable">
-                      <Trash2 className="h-4 w-4 text-destructive/80" />
-                    </Button>
+                    <div className="flex items-center no-print">
+                      <Button variant="ghost" size="icon" onClick={() => handlePrint(timetable.id)} aria-label="Print timetable">
+                        <Printer className="h-4 w-4 text-muted-foreground" />
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => handleDeleteTimetable(timetable.id)} aria-label="Delete timetable">
+                        <Trash2 className="h-4 w-4 text-destructive/80" />
+                      </Button>
+                    </div>
                   </CardHeader>
                   <CardContent>
                     <Table>

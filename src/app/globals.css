@@ -70,3 +70,22 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@media print {
+  body.printing-timetable .printable-content {
+    display: block !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: auto;
+    box-shadow: none;
+    border: none;
+  }
+  body.printing-timetable > *:not(.printable-content) {
+    display: none !important;
+  }
+  body.printing-timetable .no-print {
+    display: none !important;
+  }
+}
