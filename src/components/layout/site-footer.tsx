@@ -65,15 +65,15 @@ export default function SiteFooter() {
                     <div className="text-center md:text-left">
                         <h3 className="font-bold text-lg mb-4">Contact Us</h3>
                         <address className="not-italic text-muted-foreground space-y-2">
-                            <p>123 School Lane, Education City</p>
-                            <p>Email: info@kourkyls.edu</p>
-                            <p>Phone: (123) 456-7890</p>
+                            <p> No 7, Ivara Esu Street, State Housing, Calabar, CRS.</p>
+                            <p>Email: support@kourklysschools.ng</p>
+                            <p>Phone: (+234)-816 594 5556</p>
                         </address>
                     </div>
                 </div>
                 <div className="mt-8 border-t pt-6 text-center text-sm text-muted-foreground">
                     <p>&copy; {new Date().getFullYear()} Kourkyls International School. All Rights Reserved.</p>
-                     <p className="text-xs mt-2">Website by Elisha Lawrence Sunday</p>
+                     <p className="text-xs mt-2">Website by Engr.Law & KIS Students</p>
                 </div>
             </div>
         </footer>
