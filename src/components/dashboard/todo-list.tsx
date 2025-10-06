@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,13 +15,35 @@ interface Task {
   completed: boolean;
 }
 
+const isBrowser = typeof window !== 'undefined';
+
 export default function TodoList() {
-  const [tasks, setTasks] = useState<Task[]>([
-    { id: 1, text: 'Finish Math homework', time: '16:00', completed: false },
-    { id: 2, text: 'Prepare for Science quiz', time: '18:30', completed: false },
-  ]);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [newTaskText, setNewTaskText] = useState('');
   const [newTaskTime, setNewTaskTime] = useState('');
+
+  useEffect(() => {
+    if (isBrowser) {
+      try {
+        const storedTasks = localStorage.getItem('tasks');
+        if (storedTasks) {
+          setTasks(JSON.parse(storedTasks));
+        }
+      } catch (error) {
+        console.error('Error parsing tasks from localStorage', error);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isBrowser) {
+      // Avoid saving the initial empty array state before tasks are loaded.
+      if (tasks.length > 0 || localStorage.getItem('tasks')) {
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+      }
+    }
+  }, [tasks]);
+
 
   const handleAddTask = () => {
     if (newTaskText.trim() === '') return;
