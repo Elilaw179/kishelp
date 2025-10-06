@@ -1,6 +1,12 @@
 {
   "newsItems": [
     {
+      "id": 1759748261674,
+      "createdAt": "2025-10-06T10:57:41.674Z",
+      "title": "Coding And Science Exhibition 2025",
+      "content": "There will be coding exhibition this coming month on the 20th oct 2025, Parents are invited to be around and witness their children's performance "
+    },
+    {
       "id": 1,
       "createdAt": "2024-07-30T10:00:00.000Z",
       "title": "Welcome to the New School Year!",
