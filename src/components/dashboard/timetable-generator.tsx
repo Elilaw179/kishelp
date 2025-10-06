@@ -10,44 +10,53 @@ import { generateTimetable, TimetableOutput } from '@/ai/flows/get-started-timet
 import { useToast } from '@/hooks/use-toast';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
+interface EnrichedTimetableOutput extends TimetableOutput {
+  id: number;
+  prompt: string;
+}
+
 const isBrowser = typeof window !== 'undefined';
 
 export default function TimetableGenerator() {
   const [prompt, setPrompt] = useState('Example: I have Math on Monday at 9am, Science on Tuesday at 10am, and Coding club on Friday afternoon.');
-  const [timetable, setTimetable] = useState<TimetableOutput | null>(null);
+  const [timetables, setTimetables] = useState<EnrichedTimetableOutput[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     if (isBrowser) {
       try {
-        const storedTimetable = localStorage.getItem('timetable');
-        if (storedTimetable) {
-          setTimetable(JSON.parse(storedTimetable));
+        const storedTimetables = localStorage.getItem('timetables');
+        if (storedTimetables) {
+          setTimetables(JSON.parse(storedTimetables));
         }
       } catch (error) {
-        console.error('Error parsing timetable from localStorage', error);
+        console.error('Error parsing timetables from localStorage', error);
       }
     }
   }, []);
 
   useEffect(() => {
     if (isBrowser) {
-      if (timetable || localStorage.getItem('timetable')) {
-        localStorage.setItem('timetable', JSON.stringify(timetable));
+      if (timetables.length > 0 || localStorage.getItem('timetables')) {
+        localStorage.setItem('timetables', JSON.stringify(timetables));
       }
     }
-  }, [timetable]);
+  }, [timetables]);
 
 
   const handleGenerate = async () => {
     if (prompt.trim() === '' || isLoading) return;
 
     setIsLoading(true);
-    setTimetable(null);
     try {
       const response = await generateTimetable({ prompt });
-      setTimetable(response);
+      const newTimetable: EnrichedTimetableOutput = {
+        ...response,
+        id: Date.now(),
+        prompt: prompt,
+      };
+      setTimetables(prev => [newTimetable, ...prev]);
     } catch (error) {
       console.error('Error generating timetable:', error);
       toast({
@@ -60,9 +69,12 @@ export default function TimetableGenerator() {
     }
   };
 
-  const handleClearTimetable = () => {
-    setTimetable(null);
-    localStorage.removeItem('timetable');
+  const handleDeleteTimetable = (id: number) => {
+    const updatedTimetables = timetables.filter(t => t.id !== id);
+    setTimetables(updatedTimetables);
+    if(updatedTimetables.length === 0) {
+      localStorage.removeItem('timetables');
+    }
   }
 
   return (
@@ -90,41 +102,48 @@ export default function TimetableGenerator() {
           {isLoading ? <Loader className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
           Generate Timetable
         </Button>
-        {(isLoading || timetable) && (
-          <div className="mt-4">
-            <div className="flex justify-between items-center mb-2">
-              <h4 className="font-semibold">Generated Timetable:</h4>
-               {timetable && !isLoading && (
-                <Button variant="ghost" size="icon" onClick={handleClearTimetable} aria-label="Clear timetable">
-                  <Trash2 className="h-4 w-4 text-destructive/80" />
-                </Button>
-              )}
-            </div>
-            <ScrollArea className="h-48 w-full rounded-md border bg-background/50">
-              {isLoading && !timetable && <p className="text-muted-foreground p-4">Generating your timetable...</p>}
-              {timetable && (
-                 <Table>
-                  <TableHeader>
-                    <TableRow>
-                      {timetable.headers.map((header, index) => (
-                        <TableHead key={index} className="font-bold">{header}</TableHead>
-                      ))}
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {timetable.rows.map((row, rowIndex) => (
-                      <TableRow key={rowIndex}>
-                        {row.map((cell, cellIndex) => (
-                          <TableCell key={cellIndex}>{cell}</TableCell>
+        <div className="mt-4">
+          <h4 className="font-semibold mb-2">Generated Timetables:</h4>
+          <ScrollArea className="h-48 w-full">
+            <div className="space-y-4 pr-4">
+              {isLoading && <p className="text-muted-foreground p-4">Generating your new timetable...</p>}
+              {timetables.length === 0 && !isLoading && <p className="text-muted-foreground text-center py-4">No timetables yet. Generate one above!</p>}
+              {timetables.map((timetable) => (
+                <Card key={timetable.id} className="bg-background/50">
+                  <CardHeader className="flex flex-row items-start justify-between pb-2">
+                    <div>
+                      <CardTitle className="text-base">Timetable</CardTitle>
+                      <p className="text-xs text-muted-foreground truncate max-w-[200px] md:max-w-xs">Based on: "{timetable.prompt}"</p>
+                    </div>
+                    <Button variant="ghost" size="icon" onClick={() => handleDeleteTimetable(timetable.id)} aria-label="Delete timetable">
+                      <Trash2 className="h-4 w-4 text-destructive/80" />
+                    </Button>
+                  </CardHeader>
+                  <CardContent>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          {timetable.headers.map((header, index) => (
+                            <TableHead key={index} className="font-bold">{header}</TableHead>
+                          ))}
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {timetable.rows.map((row, rowIndex) => (
+                          <TableRow key={rowIndex}>
+                            {row.map((cell, cellIndex) => (
+                              <TableCell key={cellIndex}>{cell}</TableCell>
+                            ))}
+                          </TableRow>
                         ))}
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              )}
-            </ScrollArea>
-          </div>
-        )}
+                      </TableBody>
+                    </Table>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </ScrollArea>
+        </div>
       </CardContent>
     </Card>
   );
