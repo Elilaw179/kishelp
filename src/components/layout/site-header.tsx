@@ -33,6 +33,7 @@ export default function SiteHeader() {
               width={40}
               height={40}
               data-ai-hint={logo.imageHint}
+              className="dark:bg-white dark:rounded-full dark:p-1"
             />
           )}
           <span className="font-bold text-lg hidden sm:inline">Kourkly's Classroom Companion</span>
@@ -74,6 +75,7 @@ export default function SiteHeader() {
                             width={30}
                             height={30}
                             data-ai-hint={logo.imageHint}
+                            className="dark:bg-white dark:rounded-full dark:p-1"
                             />
                         )}
                         <span className="font-bold">Kourkly's Classroom Companion</span>

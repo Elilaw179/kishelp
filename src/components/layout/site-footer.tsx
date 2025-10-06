@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -41,7 +42,7 @@ export default function SiteFooter() {
                     <div className="flex flex-col items-center md:items-start">
                          {logo && (
                             <button onClick={handleLogoClick} aria-label="Admin Access Trigger">
-                                <Image src={logo.imageUrl} alt={logo.description} width={80} height={80} data-ai-hint={logo.imageHint} />
+                                <Image src={logo.imageUrl} alt={logo.description} width={80} height={80} data-ai-hint={logo.imageHint} className="dark:bg-white dark:rounded-md dark:p-1" />
                             </button>
                          )}
                         <p className="mt-2 text-sm text-muted-foreground max-w-xs text-center md:text-left">
