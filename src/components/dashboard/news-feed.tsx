@@ -1,35 +1,49 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Megaphone } from 'lucide-react';
+import { Megaphone, Loader } from 'lucide-react';
 
-const newsItems = [
-  {
-    id: 1,
-    title: 'Annual Sports Day Postponed',
-    date: '2 hours ago',
-    content: 'The annual sports day scheduled for this Friday has been postponed due to expected heavy rainfall. A new date will be announced soon.',
-  },
-  {
-    id: 2,
-    title: 'Science Fair Submissions Due Next Week',
-    date: '1 day ago',
-    content: 'All students participating in the science fair must submit their project proposals by next Monday. Please see Mr. Davison for details.',
-  },
-  {
-    id: 3,
-    title: 'Mid-Term Exam Schedule Released',
-    date: '3 days ago',
-    content: 'The schedule for the upcoming mid-term examinations is now available on the school portal. Exams will commence in two weeks.',
-  },
-   {
-    id: 4,
-    title: 'Coding Club Workshop on Saturday',
-    date: '4 days ago',
-    content: 'Join us for a special workshop on "Introduction to Web Development" this Saturday at 10 AM in the computer lab. All are welcome!',
-  },
-];
+interface NewsItem {
+  id: number;
+  title: string;
+  date: string;
+  content: string;
+}
 
 export default function NewsFeed() {
+  const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      setIsLoading(true);
+      try {
+        const res = await fetch('/api/news');
+        if (res.ok) {
+          const data = await res.json();
+          setNewsItems(data.newsItems);
+        } else {
+           setNewsItems([]); 
+        }
+      } catch (error) {
+        console.error('Failed to fetch news:', error);
+        setNewsItems([]); // Set to empty on error
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchNews();
+    
+    // Set up polling to refresh news every 30 seconds
+    const interval = setInterval(fetchNews, 30000);
+
+    return () => clearInterval(interval);
+
+  }, []);
+
   return (
     <Card className="shadow-lg">
       <CardHeader>
@@ -40,17 +54,29 @@ export default function NewsFeed() {
       </CardHeader>
       <CardContent>
         <ScrollArea className="h-[250px] w-full">
-          <div className="space-y-6 pr-4">
-            {newsItems.map(item => (
-              <div key={item.id} className="p-3 rounded-lg bg-background/50">
-                <div className="flex justify-between items-baseline mb-1">
-                  <h4 className="font-semibold text-sm">{item.title}</h4>
-                  <span className="text-xs text-muted-foreground">{item.date}</span>
+          {isLoading ? (
+            <div className="flex justify-center items-center h-full">
+              <Loader className="h-6 w-6 animate-spin text-muted-foreground" />
+            </div>
+          ) : (
+            <div className="space-y-6 pr-4">
+              {newsItems.length > 0 ? (
+                newsItems.map(item => (
+                  <div key={item.id} className="p-3 rounded-lg bg-background/50 animate-in fade-in-0 duration-500">
+                    <div className="flex justify-between items-baseline mb-1">
+                      <h4 className="font-semibold text-sm">{item.title}</h4>
+                      <span className="text-xs text-muted-foreground">{item.date}</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">{item.content}</p>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center text-muted-foreground py-8">
+                  <p>No news to display at the moment.</p>
                 </div>
-                <p className="text-sm text-muted-foreground">{item.content}</p>
-              </div>
-            ))}
-          </div>
+              )}
+            </div>
+          )}
         </ScrollArea>
       </CardContent>
     </Card>

@@ -1,0 +1,16 @@
+{
+  "newsItems": [
+    {
+      "id": 1,
+      "createdAt": "2024-07-30T10:00:00.000Z",
+      "title": "Welcome to the New School Year!",
+      "content": "We are excited to welcome all students, new and returning, to Kourkyls International School for another amazing year of learning and growth."
+    },
+    {
+      "id": 2,
+      "createdAt": "2024-07-29T14:30:00.000Z",
+      "title": "Parent-Teacher Meetings",
+      "content": "Parent-teacher meetings will be held next week. Please check the school portal to book a slot with your child's teachers."
+    }
+  ]
+}
