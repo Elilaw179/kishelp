@@ -72,6 +72,18 @@ body {
 }
 
 @media print {
+  body.printing * {
+    visibility: hidden;
+  }
+  body.printing .printable-section, body.printing .printable-section * {
+    visibility: visible;
+  }
+  body.printing .printable-section {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
   .no-print {
     display: none !important;
   }

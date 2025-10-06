@@ -104,50 +104,18 @@ export default function TimetableGenerator() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
-
+  
   const handlePrint = (id: number) => {
     const timetableElement = timetableRefs.current[id];
     if (!timetableElement) return;
 
-    const printableContent = timetableElement.innerHTML;
+    timetableElement.classList.add('printable-section');
+    document.body.classList.add('printing');
     
-    const iframe = document.createElement('iframe');
-    iframe.style.position = 'absolute';
-    iframe.style.width = '0';
-    iframe.style.height = '0';
-    iframe.style.border = '0';
-    document.body.appendChild(iframe);
-
-    const doc = iframe.contentWindow?.document;
-    if (!doc) return;
-
-    doc.open();
-    doc.write(`
-      <html>
-        <head>
-          <title>Print Timetable</title>
-          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
-          <style>
-            @page { size: auto; margin: 0.5in; }
-            body { margin: 0; padding: 0; font-family: sans-serif; }
-            .no-print { display: none !important; }
-            table { width: 100%; border-collapse: collapse; }
-            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-            th { background-color: #f2f2f2; }
-          </style>
-        </head>
-        <body>${printableContent}</body>
-      </html>
-    `);
-    doc.close();
-
-    iframe.contentWindow?.focus();
-    iframe.contentWindow?.print();
+    window.print();
     
-    // Clean up after printing
-    setTimeout(() => {
-        document.body.removeChild(iframe);
-    }, 1000);
+    timetableElement.classList.remove('printable-section');
+    document.body.classList.remove('printing');
   };
 
   return (
