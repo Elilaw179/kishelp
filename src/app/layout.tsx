@@ -8,6 +8,9 @@ import { ThemeProvider } from '@/components/layout/theme-provider';
 export const metadata: Metadata = {
   title: "Kourkly's Classroom Companion",
   description: 'A professional site for students of Kourkyls International School',
+  icons: {
+    icon: '/kislogo.png',
+  },
 };
 
 export default function RootLayout({
