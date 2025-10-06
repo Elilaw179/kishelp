@@ -76,7 +76,7 @@ export default function AboutPage() {
           <div className="animate-in fade-in slide-in-from-right-8 duration-700">
             <h2 className="text-3xl font-bold mb-4 text-primary">Our History</h2>
             <p className="text-lg text-muted-foreground mb-4">
-              Founded in 2019 by Elisha Lawrence Sunday, Kourkyls International School started with a vision to create a unique learning space for children in the community.
+              Founded in 2019, Kourkyls International School started with a vision to create a unique learning space for children in the community.
             </p>
             <p className="text-lg text-muted-foreground">
               From our humble beginnings with just a handful of students, we have grown into a thriving educational center known for its innovative teaching methods and dedicated staff. We are proud of our journey and excited for the future as we continue to nurture the next generation of leaders.
