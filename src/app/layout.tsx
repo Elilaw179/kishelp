@@ -9,10 +9,7 @@ export const metadata: Metadata = {
   title: "Kourkly's Classroom Companion",
   description: 'A professional site for students of Kourkyls International School',
   icons: {
-    icon: [
-      { url: '/kislogo.png' },
-      new URL('/kislogo.png', 'https://example.com'),
-    ]
+    icon: '/kislogo.png',
   },
 };
 
@@ -27,7 +24,6 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
-        <link rel="icon" href="/kislogo.png" sizes="any" />
       </head>
       <body className="font-body antialiased bg-background min-h-screen flex flex-col">
         <ThemeProvider
