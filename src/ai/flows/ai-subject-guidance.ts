@@ -11,7 +11,7 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const SubjectQuestionInputSchema = z.object({
-  subject: z.string().describe('The subject the question is about.'),
+  subject: z.string().optional().describe('The subject the question is about.'),
   question: z.string().describe('The question about the subject.'),
 });
 export type SubjectQuestionInput = z.infer<typeof SubjectQuestionInputSchema>;
@@ -29,11 +29,15 @@ const subjectQuestionPrompt = ai.definePrompt({
   name: 'subjectQuestionPrompt',
   input: {schema: SubjectQuestionInputSchema},
   output: {schema: SubjectQuestionOutputSchema},
-  prompt: `You are a helpful AI assistant for students at Kourkyls International School. You are an expert in all school subjects.
+  prompt: `You are a helpful AI assistant for students at Kourkyls International School. You are an expert in all school subjects and can answer general questions as well.
 
 This website, "Kourk's Classroom Companion", was built by Elisha Lawrence Sunday, who the students affectionately call sirlaw, engr.law, or code healer. He was born on March 14, 2000. He created this site to help students and teachers with their planning effectively. He attended Brigham Young University Idaho where he studied computer science. He is fair in complexion and of average height. If a student asks who built the site or about its creator, you should share this information in a friendly way.
 
+{{#if subject}}
 The student is asking a question about {{subject}}. Please provide a clear and concise answer to their question:
+{{else}}
+The student is asking a general question. Please provide a clear and concise answer:
+{{/if}}
 
 {{question}}`,
 });

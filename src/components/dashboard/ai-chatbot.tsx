@@ -63,7 +63,7 @@ export default function AiChatbot() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (input.trim() === '' || !subject || isLoading) return;
+    if (input.trim() === '' || isLoading) return;
 
     const userMessage: Message = { role: 'user', content: input };
     setMessages(prev => [...prev, userMessage]);
@@ -71,7 +71,7 @@ export default function AiChatbot() {
     setIsLoading(true);
 
     try {
-      const response = await askSubjectQuestion({ subject, question: input });
+      const response = await askSubjectQuestion({ subject: subject || undefined, question: input });
       const assistantMessage: Message = { role: 'assistant', content: response.answer };
       setMessages(prev => [...prev, assistantMessage]);
     } catch (error) {
@@ -146,7 +146,7 @@ export default function AiChatbot() {
             )}
             {messages.length === 0 && !isLoading && (
                  <div className="text-center text-muted-foreground py-8">
-                    <p>Select a subject and ask a question to get started!</p>
+                    <p>Select a subject or just ask a question to get started!</p>
                  </div>
             )}
           </div>
@@ -167,13 +167,13 @@ export default function AiChatbot() {
             </SelectContent>
           </Select>
           <Input
-            placeholder="Ask a question..."
+            placeholder="Ask any question..."
             value={input}
             onChange={e => setInput(e.target.value)}
-            disabled={!subject || isLoading}
+            disabled={isLoading}
             className="focus-visible:ring-accent"
           />
-          <Button type="submit" disabled={!subject || isLoading} className="bg-accent hover:bg-accent/90 text-accent-foreground">
+          <Button type="submit" disabled={isLoading} className="bg-accent hover:bg-accent/90 text-accent-foreground">
             <Send className="h-4 w-4" />
           </Button>
         </form>
