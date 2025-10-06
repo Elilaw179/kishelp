@@ -109,16 +109,45 @@ export default function TimetableGenerator() {
     const timetableElement = timetableRefs.current[id];
     if (!timetableElement) return;
 
-    const onAfterPrint = () => {
-      document.body.classList.remove('printing-timetable');
-      timetableElement.classList.remove('printable-content');
-      window.removeEventListener('afterprint', onAfterPrint);
-    };
+    const printableContent = timetableElement.innerHTML;
+    
+    const iframe = document.createElement('iframe');
+    iframe.style.position = 'absolute';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = '0';
+    document.body.appendChild(iframe);
 
-    window.addEventListener('afterprint', onAfterPrint);
-    document.body.classList.add('printing-timetable');
-    timetableElement.classList.add('printable-content');
-    window.print();
+    const doc = iframe.contentWindow?.document;
+    if (!doc) return;
+
+    doc.open();
+    doc.write(`
+      <html>
+        <head>
+          <title>Print Timetable</title>
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+          <style>
+            @page { size: auto; margin: 0.5in; }
+            body { margin: 0; padding: 0; font-family: sans-serif; }
+            .no-print { display: none !important; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+            th { background-color: #f2f2f2; }
+          </style>
+        </head>
+        <body>${printableContent}</body>
+      </html>
+    `);
+    doc.close();
+
+    iframe.contentWindow?.focus();
+    iframe.contentWindow?.print();
+    
+    // Clean up after printing
+    setTimeout(() => {
+        document.body.removeChild(iframe);
+    }, 1000);
   };
 
   return (
@@ -153,54 +182,56 @@ export default function TimetableGenerator() {
               {isLoading && !editingTimetableId && <p className="text-muted-foreground p-4">Generating your new timetable...</p>}
               {timetables.length === 0 && !isLoading && <p className="text-muted-foreground text-center py-4">No timetables yet. Generate one above!</p>}
               {timetables.map((timetable) => (
-                <Card key={timetable.id} ref={el => (timetableRefs.current[timetable.id] = el)} className="bg-background/50">
-                  <CardHeader className="flex flex-row items-start justify-between pb-2">
-                    <div>
-                      <CardTitle className="text-base">Timetable</CardTitle>
-                      <p className="text-xs text-muted-foreground truncate max-w-[200px] md:max-w-xs">Based on: "{timetable.prompt}"</p>
-                    </div>
-                    <div className="flex items-center no-print">
-                       <Button variant="ghost" size="icon" onClick={() => handleEditTimetable(timetable.id)} aria-label="Edit timetable">
-                        <Pencil className="h-4 w-4 text-muted-foreground" />
-                      </Button>
-                      <Button variant="ghost" size="icon" onClick={() => handlePrint(timetable.id)} aria-label="Print timetable">
-                        <Printer className="h-4 w-4 text-muted-foreground" />
-                      </Button>
-                      <Button variant="ghost" size="icon" onClick={() => handleDeleteTimetable(timetable.id)} aria-label="Delete timetable">
-                        <Trash2 className="h-4 w-4 text-destructive/80" />
-                      </Button>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    {isLoading && editingTimetableId === timetable.id ? (
-                      <div className="flex items-center justify-center p-8">
-                        <Loader className="h-6 w-6 animate-spin text-muted-foreground" />
-                        <p className="ml-2">Updating...</p>
-                      </div>
-                    ) : (
-                      <div className="w-full overflow-x-auto">
-                        <Table>
-                          <TableHeader>
-                            <TableRow>
-                              {timetable.headers.map((header, index) => (
-                                <TableHead key={index} className="font-bold">{header}</TableHead>
-                              ))}
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            {timetable.rows.map((row, rowIndex) => (
-                              <TableRow key={rowIndex}>
-                                {row.map((cell, cellIndex) => (
-                                  <TableCell key={cellIndex}>{cell}</TableCell>
+                <div key={timetable.id} ref={el => (timetableRefs.current[timetable.id] = el)}>
+                    <Card className="bg-background/50">
+                    <CardHeader className="flex flex-row items-start justify-between pb-2">
+                        <div>
+                        <CardTitle className="text-base">Timetable</CardTitle>
+                        <p className="text-xs text-muted-foreground truncate max-w-[200px] md:max-w-xs">Based on: "{timetable.prompt}"</p>
+                        </div>
+                        <div className="flex items-center no-print">
+                        <Button variant="ghost" size="icon" onClick={() => handleEditTimetable(timetable.id)} aria-label="Edit timetable">
+                            <Pencil className="h-4 w-4 text-muted-foreground" />
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={() => handlePrint(timetable.id)} aria-label="Print timetable">
+                            <Printer className="h-4 w-4 text-muted-foreground" />
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={() => handleDeleteTimetable(timetable.id)} aria-label="Delete timetable">
+                            <Trash2 className="h-4 w-4 text-destructive/80" />
+                        </Button>
+                        </div>
+                    </CardHeader>
+                    <CardContent>
+                        {isLoading && editingTimetableId === timetable.id ? (
+                        <div className="flex items-center justify-center p-8">
+                            <Loader className="h-6 w-6 animate-spin text-muted-foreground" />
+                            <p className="ml-2">Updating...</p>
+                        </div>
+                        ) : (
+                        <div className="w-full overflow-x-auto">
+                            <Table>
+                            <TableHeader>
+                                <TableRow>
+                                {timetable.headers.map((header, index) => (
+                                    <TableHead key={index} className="font-bold">{header}</TableHead>
                                 ))}
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {timetable.rows.map((row, rowIndex) => (
+                                <TableRow key={rowIndex}>
+                                    {row.map((cell, cellIndex) => (
+                                    <TableCell key={cellIndex}>{cell}</TableCell>
+                                    ))}
+                                </TableRow>
+                                ))}
+                            </TableBody>
+                            </Table>
+                        </div>
+                        )}
+                    </CardContent>
+                    </Card>
+                </div>
               ))}
             </div>
           </ScrollArea>
