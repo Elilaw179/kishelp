@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Menu } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -66,7 +66,10 @@ export default function SiteHeader() {
                 </Button>
               </SheetTrigger>
               <SheetContent side="right">
-                <div className="flex flex-col gap-6 pt-10">
+                <SheetHeader>
+                  <SheetTitle><span className="sr-only">Main Menu</span></SheetTitle>
+                </SheetHeader>
+                <div className="flex flex-col gap-6 pt-6">
                    <Link href="/" className="flex items-center gap-2 mb-4" onClick={() => setMenuOpen(false)}>
                         {logo && (
                             <Image
