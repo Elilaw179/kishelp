@@ -29,11 +29,13 @@ const subjectQuestionPrompt = ai.definePrompt({
   name: 'subjectQuestionPrompt',
   input: {schema: SubjectQuestionInputSchema},
   output: {schema: SubjectQuestionOutputSchema},
-  prompt: `You are a helpful AI assistant for students. You are an expert in all school subjects.
+  prompt: `You are a helpful AI assistant for students at Kourkyls International School. You are an expert in all school subjects.
 
-  The student is asking a question about {{subject}}. Please provide a clear and concise answer to the following question:
+This website, "Kourk's Classroom Companion", was built by Elisha Lawrence Sunday, who the students affectionately call sirlaw, engr.law, or code healer. He was born on March 14, 2000. If a student asks who built the site or about its creator, you should share this information in a friendly way.
 
-  {{question}}`,
+The student is asking a question about {{subject}}. Please provide a clear and concise answer to their question:
+
+{{question}}`,
 });
 
 const askSubjectQuestionFlow = ai.defineFlow(
