@@ -7,7 +7,7 @@ import Image from 'next/image';
 export default function ContactPage() {
   return (
     <div className="bg-background text-foreground">
-       <section className="relative h-[400px] flex items-center justify-center text-center text-white">
+       <section className="relative h-[400px] flex items-center justify-center text-center text-white animate-in fade-in duration-500">
         <Image
           src="https://picsum.photos/seed/contact-hero/1200/400"
           alt="School campus aerial view"
@@ -25,7 +25,7 @@ export default function ContactPage() {
       <section className="container mx-auto px-4 py-16">
         <div className="grid md:grid-cols-2 gap-16 items-start">
           {/* Contact Form */}
-          <div className="bg-card p-8 rounded-lg shadow-lg">
+          <div className="bg-card p-8 rounded-lg shadow-lg animate-in fade-in slide-in-from-bottom-8 duration-700">
             <h2 className="text-3xl font-bold mb-6">Send Us a Message</h2>
             <form className="space-y-6">
               <Input type="text" placeholder="Your Name" />
@@ -37,7 +37,7 @@ export default function ContactPage() {
           </div>
 
           {/* Contact Details */}
-          <div className="space-y-8">
+          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100">
              <div>
               <h3 className="text-2xl font-semibold mb-4 text-primary flex items-center gap-3"><MapPin /> Address</h3>
               <p className="text-lg text-muted-foreground">123 School Lane, Education City, EC 45678</p>
@@ -54,7 +54,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-       <section className="h-[400px] w-full">
+       <section className="h-[400px] w-full animate-in fade-in-0 duration-500">
             <iframe 
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3963.376419799226!2d3.351486314771014!3d6.60000009522704!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103b8d7a9e3f3b9b%3A0x2ad33c82d49933e8!2sKourkyls%20International%20School!5e0!3m2!1sen!2sng!4v1626357483863!5m2!1sen!2sng" 
                 width="100%" 
