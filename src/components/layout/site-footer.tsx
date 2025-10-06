@@ -1,23 +1,49 @@
+'use client';
+
 import Link from 'next/link';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Image from 'next/image';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 const footerLinks = [
     { name: 'About', href: '/about' },
     { name: 'Contact', href: '/contact' },
     { name: 'Portal', href: '/dashboard' },
-    { name: 'Admin', href: '/admin' },
 ];
 
 export default function SiteFooter() {
     const logo = PlaceHolderImages.find(p => p.id === 'school-logo');
+    const [adminClickCount, setAdminClickCount] = useState(0);
+    const router = useRouter();
+
+    const handleLogoClick = () => {
+        const newCount = adminClickCount + 1;
+        setAdminClickCount(newCount);
+
+        if (newCount >= 5) {
+            router.push('/admin');
+            setAdminClickCount(0); // Reset after navigating
+        }
+
+        // Reset count if user stops clicking
+        setTimeout(() => {
+            if (adminClickCount < 5) { // Check against the count before timeout
+                setAdminClickCount(c => (c === newCount ? 0 : c));
+            }
+        }, 2000);
+    };
 
     return (
         <footer className="bg-card border-t text-card-foreground">
             <div className="container mx-auto px-4 py-8">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div className="flex flex-col items-center md:items-start">
-                         {logo && <Image src={logo.imageUrl} alt={logo.description} width={80} height={80} data-ai-hint={logo.imageHint} />}
+                         {logo && (
+                            <button onClick={handleLogoClick} aria-label="Admin Access Trigger">
+                                <Image src={logo.imageUrl} alt={logo.description} width={80} height={80} data-ai-hint={logo.imageHint} />
+                            </button>
+                         )}
                         <p className="mt-2 text-sm text-muted-foreground max-w-xs text-center md:text-left">
                             Kourkyls International School <br/> Nurturing Great Minds for Excellence
                         </p>
