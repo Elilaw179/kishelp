@@ -16,7 +16,7 @@ interface Message {
   content: string;
 }
 
-const subjects = ['Mathematics', 'Physics', 'Chemistry', 'Biology', 'History', 'Geography', 'English', 'Coding'];
+const subjects = ['Mathematics', 'Physics', 'Chemistry', 'Biology', 'History', 'Geography', 'English', 'Coding', 'Other'];
 const isBrowser = typeof window !== 'undefined';
 
 export default function AiChatbot() {
