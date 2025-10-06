@@ -37,7 +37,7 @@ export default function SiteFooter() {
     return (
         <footer className="bg-card border-t text-card-foreground">
             <div className="container mx-auto px-4 py-8">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                     <div className="flex flex-col items-center md:items-start">
                          {logo && (
                             <button onClick={handleLogoClick} aria-label="Admin Access Trigger">
@@ -59,6 +59,16 @@ export default function SiteFooter() {
                                     </Link>
                                 </li>
                             ))}
+                        </ul>
+                    </div>
+                     <div className="text-center">
+                        <h3 className="font-bold text-lg mb-4">For Students</h3>
+                        <ul className="space-y-2">
+                           <li>
+                             <Link href="/presentation" className="text-muted-foreground hover:text-primary transition-colors">
+                                Presentation Guide
+                            </Link>
+                           </li>
                         </ul>
                     </div>
                     
