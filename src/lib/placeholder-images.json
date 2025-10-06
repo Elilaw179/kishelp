@@ -3,8 +3,8 @@
     {
       "id": "student-avatar",
       "description": "A placeholder avatar for a student user.",
-      "imageUrl": "https://images.unsplash.com/photo-1750926013403-407ff0b0db06?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxzdHVkZW50JTIwcG9ydHJhaXR8ZW58MHx8fHwxNzU5Njc5NTQwfDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "student portrait"
+      "imageUrl": "https://storage.googleapis.com/aifirebase/elisha.jpg",
+      "imageHint": "creator portrait"
     }
   ]
 }
