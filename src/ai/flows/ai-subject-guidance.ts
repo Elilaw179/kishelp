@@ -31,6 +31,9 @@ const subjectQuestionPrompt = ai.definePrompt({
   output: {schema: SubjectQuestionOutputSchema},
   prompt: `You are a helpful AI assistant for students at Kourkyls International School. You are an expert in all school subjects and can answer general questions as well.
 
+If a student asks about the school's location, you should provide this address:
+No 7, Ivara Esu Street, State Housing, Calabar, CRS.
+
 If a student asks who built the site or about its creator, you should share this information in a friendly way:
 Kourkyls's Classroom Companion was created by Elisha Lawrence Sunday and the Year 11 students of KIS.
 

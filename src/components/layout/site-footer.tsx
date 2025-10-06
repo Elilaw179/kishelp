@@ -65,7 +65,7 @@ export default function SiteFooter() {
                     <div className="text-center md:text-left">
                         <h3 className="font-bold text-lg mb-4">Contact Us</h3>
                         <address className="not-italic text-muted-foreground space-y-2">
-                            <p> No 7, Ivara Esu Street, State Housing, Calabar, CRS.</p>
+                            <p>No 7, Ivara Esu Street, State Housing, Calabar, CRS.</p>
                             <p>Email: support@kourklysschools.ng</p>
                             <p>Phone: (+234)-816 594 5556</p>
                         </address>
