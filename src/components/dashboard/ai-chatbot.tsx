@@ -93,7 +93,7 @@ export default function AiChatbot() {
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="flex items-center gap-2">
           <MessageCircle className="h-6 w-6" />
-          <span>AI Subject Guidance</span>
+          <span>AI Assistant</span>
         </CardTitle>
         {messages.length > 0 && (
           <Button variant="ghost" size="icon" onClick={handleClearChat} aria-label="Clear chat history">
