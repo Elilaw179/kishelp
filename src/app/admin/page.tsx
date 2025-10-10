@@ -149,7 +149,10 @@ export default function AdminPage() {
             <Button onClick={handleLogin}>
               <LogIn className="mr-2" /> Login
             </Button>
-            <p className='text-xs text-center text-muted-foreground'>(Hint: the password is `admin123`)</p>
+            <p className='text-xs text-center text-muted-foreground'>
+
+              {/* (Hint: the password is `admin123`) */}
+            </p>
           </CardContent>
         </Card>
       </div>

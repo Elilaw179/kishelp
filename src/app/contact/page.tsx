@@ -39,16 +39,18 @@ export default function ContactPage() {
           {/* Contact Details */}
           <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100">
              <div>
-              <h3 className="text-2xl font-semibold mb-4 text-primary flex items-center gap-3"><MapPin /> Address</h3>
-              <p className="text-lg text-muted-foreground">123 School Lane, Education City, EC 45678</p>
+              <h3 className="text-2xl font-semibold mb-4 text-primary flex items-center gap-3"><MapPin /> Address:</h3>
+              <p className="text-lg text-muted-foreground">No 7, Ivara Esu Street, State Housing, Calabar, CRS.</p>
             </div>
              <div>
-              <h3 className="text-2xl font-semibold mb-4 text-primary flex items-center gap-3"><Phone /> Phone</h3>
-              <p className="text-lg text-muted-foreground">(123) 456-7890</p>
+              <h3 className="text-2xl font-semibold mb-4 text-primary flex items-center gap-3"><Phone /> Phone: 
+
+</h3>
+              <p className="text-lg text-muted-foreground">(+234)-816 594 5556</p>
             </div>
              <div>
-              <h3 className="text-2xl font-semibold mb-4 text-primary flex items-center gap-3"><Mail /> Email</h3>
-              <p className="text-lg text-muted-foreground">info@kourkyls.edu</p>
+              <h3 className="text-2xl font-semibold mb-4 text-primary flex items-center gap-3"><Mail /> Email:</h3>
+              <p className="text-lg text-muted-foreground">Email: support@kourklysschools.ng</p>
             </div>
           </div>
         </div>
