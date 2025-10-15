@@ -1,6 +1,12 @@
 {
   "newsItems": [
     {
+      "id": 1760527161843,
+      "createdAt": "2025-10-15T11:19:21.843Z",
+      "title": "Mid-Term Exams",
+      "content": "Next week is mid-term exams get prepared"
+    },
+    {
       "id": 1759748261674,
       "createdAt": "2025-10-06T10:57:41.674Z",
       "title": "Coding And Science Exhibition 2025",
