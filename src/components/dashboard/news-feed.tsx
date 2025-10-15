@@ -18,7 +18,8 @@ export default function NewsFeed() {
 
   useEffect(() => {
     const fetchNews = async () => {
-      setIsLoading(true);
+      // Don't set loading to true on refetch
+      // setIsLoading(true); 
       try {
         const res = await fetch('/api/news');
         if (res.ok) {

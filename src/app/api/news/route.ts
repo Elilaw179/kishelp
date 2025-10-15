@@ -3,6 +3,7 @@ import initialNewsData from '@/lib/news-data.json';
 import { formatDistanceToNow } from 'date-fns';
 
 // In-memory store for news items. This will reset when the server restarts.
+// It's initialized with the data from the JSON file.
 let newsItems = initialNewsData.newsItems.map(item => ({
     ...item,
     id: Number(item.id) // Ensure all IDs are numbers
@@ -36,12 +37,13 @@ export async function POST(request: Request) {
     }
 
     const newPost = {
-      id: Date.now(),
+      id: Date.now(), // Use a timestamp for a unique numeric ID
       createdAt: new Date().toISOString(),
       title,
       content,
     };
 
+    // Add the new post to the in-memory array
     newsItems.unshift(newPost);
     
     const newPostWithRelativeDate = {
@@ -58,12 +60,13 @@ export async function POST(request: Request) {
 export async function DELETE(request: Request) {
   try {
     const { id } = await request.json();
-    if (!id) {
-      return NextResponse.json({ message: 'ID is required' }, { status: 400 });
+    const idAsNumber = Number(id);
+    if (!idAsNumber) {
+      return NextResponse.json({ message: 'A valid ID is required' }, { status: 400 });
     }
 
     const initialLength = newsItems.length;
-    newsItems = newsItems.filter((item) => item.id !== id);
+    newsItems = newsItems.filter((item) => item.id !== idAsNumber);
 
     if (newsItems.length === initialLength) {
         return NextResponse.json({ message: 'News item not found' }, { status: 404 });
